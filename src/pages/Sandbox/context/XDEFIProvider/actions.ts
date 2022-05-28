@@ -1,5 +1,7 @@
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 
+import { IXfiBitcoinProvider, IXfiLitecoinProvider } from './types'
+
 export enum XDEFIProviderActions {
   XDEFI_CONNECTED = 'XDEFI_CONNECTED',
   XDEFI_NOT_DISCONNECTED = 'XDEFI_NOT_DISCONNECTED',
@@ -11,8 +13,8 @@ export type ActionTypes =
       type: XDEFIProviderActions.XDEFI_CONNECTED
       payload: {
         ethereumWallet: HDWallet
-        xfiBitcoinProvider: any
-        xfiLitecoinProvider: any
+        xfiBitcoinProvider: IXfiBitcoinProvider
+        xfiLitecoinProvider: IXfiLitecoinProvider
       }
     }
   | {

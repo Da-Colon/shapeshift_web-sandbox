@@ -8,7 +8,7 @@ import {
 } from '../../../../context/WalletProvider/local-wallet'
 import { useWallet } from '../../../../hooks/useWallet/useWallet'
 import { ActionTypes, XDEFIProviderActions } from './actions'
-import { InitialState } from './types'
+import { InitialState, IXfiBitcoinProvider, IXfiLitecoinProvider } from './types'
 import { IXDEFIProviderContext, XDEFIProviderContext } from './XDEFIContext'
 
 const initialState: InitialState = {
@@ -57,7 +57,7 @@ const getInitialState = () => {
   return initialState
 }
 
-const injectedAccount = async (xfiProvider: any): Promise<string[] | undefined> => {
+const injectedAccount = async (xfiProvider: any): Promise<string[]> => {
   return new Promise(resolve => {
     xfiProvider.request(
       { method: 'request_accounts', params: [] },
@@ -66,7 +66,7 @@ const injectedAccount = async (xfiProvider: any): Promise<string[] | undefined> 
           resolve(accounts)
         }
         if (error) {
-          resolve(undefined)
+          resolve([])
         }
       },
     )
@@ -87,8 +87,8 @@ export const XDEFIProviderProvider = ({ children }: { children: React.ReactNode 
         case KeyManager.XDefi: {
           ;(async () => {
             const xfi = (window as any).xfi
-            const xfiBitcoinProvider = xfi['bitcoin']
-            const xfiLitecoinProvider = xfi['litecoin']
+            const xfiBitcoinProvider: IXfiBitcoinProvider = xfi['bitcoin']
+            const xfiLitecoinProvider: IXfiLitecoinProvider = xfi['litecoin']
             const xfiBitcoinAccounts = await injectedAccount(xfiBitcoinProvider)
             const xfiLItecoinAccounts = await injectedAccount(xfiLitecoinProvider)
 
@@ -98,11 +98,11 @@ export const XDEFIProviderProvider = ({ children }: { children: React.ReactNode 
                 ethereumWallet: wallet!,
                 xfiBitcoinProvider: {
                   ...xfiBitcoinProvider,
-                  xfiBitcoinAccounts,
+                  accounts: xfiBitcoinAccounts,
                 },
                 xfiLitecoinProvider: {
                   ...xfiLitecoinProvider,
-                  xfiLItecoinAccounts,
+                  accounts: xfiLItecoinAccounts,
                 },
               },
             })
