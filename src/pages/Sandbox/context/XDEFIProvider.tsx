@@ -29,8 +29,6 @@ export type ActionTypes =
         ethereumWallet: HDWallet
         xfiBitcoinProvider: any
         xfiLitecoinProvider: any
-        xfiBitcoinWalletAddress?: string
-        xfiLItecoinWalletAddress?: string
       }
     }
   | {
@@ -47,8 +45,6 @@ export interface InitialState {
   ethereumWallet: HDWallet | null
   xfiBitcoinProvider: any | null
   xfiLitecoinProvider: any | null
-  xfiBitcoinWalletAddresss?: string
-  xfiLItecoinWalletAddress?: string
   isWalletLoading: boolean
 }
 
@@ -105,13 +101,13 @@ const getInitialState = () => {
   return initialState
 }
 
-const injectedAccount = async (xfiProvider: any): Promise<string | undefined> => {
+const injectedAccount = async (xfiProvider: any): Promise<string[] | undefined> => {
   return new Promise(resolve => {
     xfiProvider.request(
       { method: 'request_accounts', params: [] },
       (error: any, accounts: string[]) => {
         if (!error && accounts.length) {
-          resolve(accounts[0])
+          resolve(accounts)
         }
         if (error) {
           resolve(undefined)
@@ -137,17 +133,21 @@ export const XDEFIProviderProvider = ({ children }: { children: React.ReactNode 
             const xfi = (window as any).xfi
             const xfiBitcoinProvider = xfi['bitcoin']
             const xfiLitecoinProvider = xfi['litecoin']
-            const xfiBitcoinWalletAddress = await injectedAccount(xfiBitcoinProvider)
-            const xfiLItecoinWalletAddress = await injectedAccount(xfiLitecoinProvider)
+            const xfiBitcoinAccounts = await injectedAccount(xfiBitcoinProvider)
+            const xfiLItecoinAccounts = await injectedAccount(xfiLitecoinProvider)
 
             dispatch({
               type: XDEFIProviderActions.XDEFI_CONNECTED,
               payload: {
                 ethereumWallet: wallet!,
-                xfiBitcoinProvider,
-                xfiLitecoinProvider,
-                xfiBitcoinWalletAddress,
-                xfiLItecoinWalletAddress,
+                xfiBitcoinProvider: {
+                  ...xfiBitcoinProvider,
+                  xfiBitcoinAccounts,
+                },
+                xfiLitecoinProvider: {
+                  ...xfiLitecoinProvider,
+                  xfiLItecoinAccounts,
+                },
               },
             })
           })()
