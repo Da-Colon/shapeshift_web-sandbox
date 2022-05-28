@@ -1,52 +1,15 @@
 /* eslint-disable no-console */
-import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useReducer,
-} from 'react'
+import React, { useCallback, useEffect, useMemo, useReducer } from 'react'
 
-import { KeyManager } from '../../../context/WalletProvider/KeyManager'
+import { KeyManager } from '../../../../context/WalletProvider/KeyManager'
 import {
   getLocalWalletDeviceId,
   getLocalWalletType,
-} from '../../../context/WalletProvider/local-wallet'
-import { useWallet } from '../../../hooks/useWallet/useWallet'
-
-export enum XDEFIProviderActions {
-  XDEFI_CONNECTED = 'XDEFI_CONNECTED',
-  XDEFI_NOT_DISCONNECTED = 'XDEFI_NOT_DISCONNECTED',
-  RESET_STATE = 'RESET_STATE',
-}
-
-export type ActionTypes =
-  | {
-      type: XDEFIProviderActions.XDEFI_CONNECTED
-      payload: {
-        ethereumWallet: HDWallet
-        xfiBitcoinProvider: any
-        xfiLitecoinProvider: any
-      }
-    }
-  | {
-      type: XDEFIProviderActions.XDEFI_NOT_DISCONNECTED
-      payload: {
-        ethereumWallet: HDWallet
-      }
-    }
-  | {
-      type: XDEFIProviderActions.RESET_STATE
-    }
-
-export interface InitialState {
-  ethereumWallet: HDWallet | null
-  xfiBitcoinProvider: any | null
-  xfiLitecoinProvider: any | null
-  isWalletLoading: boolean
-}
+} from '../../../../context/WalletProvider/local-wallet'
+import { useWallet } from '../../../../hooks/useWallet/useWallet'
+import { ActionTypes, XDEFIProviderActions } from './actions'
+import { InitialState } from './types'
+import { IXDEFIProviderContext, XDEFIProviderContext } from './XDEFIContext'
 
 const initialState: InitialState = {
   ethereumWallet: null,
@@ -81,13 +44,6 @@ export const reducer = (state: InitialState, action: ActionTypes) => {
       return state
   }
 }
-
-export interface IXDEFIProviderContext {
-  state: InitialState
-  dispatch: React.Dispatch<ActionTypes>
-}
-
-export const XDEFIProviderContext = createContext<IXDEFIProviderContext | null>(null)
 
 const getInitialState = () => {
   const localWalletType = getLocalWalletType()
@@ -181,6 +137,3 @@ export const XDEFIProviderProvider = ({ children }: { children: React.ReactNode 
 
   return <XDEFIProviderContext.Provider value={value}>{children}</XDEFIProviderContext.Provider>
 }
-
-export const useXDEFIProvider = (): IXDEFIProviderContext =>
-  useContext(XDEFIProviderContext as React.Context<IXDEFIProviderContext>)
