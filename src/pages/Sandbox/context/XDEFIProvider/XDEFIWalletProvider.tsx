@@ -73,7 +73,7 @@ const injectedAccount = async (xfiProvider: any): Promise<string[]> => {
   })
 }
 
-export const XDEFIProviderProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
+export const XDEFIWalletProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, getInitialState())
   const {
     state: { wallet },

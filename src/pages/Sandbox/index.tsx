@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { useXDEFIProvider } from './context/XDEFIProvider/hooks/useXDEFIProvider'
-import { XDEFIProviderProvider } from './context/XDEFIProvider/XDEFIProvider'
+import { XDEFIWalletProvider } from './context/XDEFIProvider/XDEFIWalletProvider'
 
 const OGPage = () => {
   const providers = useXDEFIProvider()
@@ -11,9 +11,9 @@ const OGPage = () => {
 export const Sandbox = () => {
   return (
     <div>
-      <XDEFIProviderProvider>
+      <XDEFIWalletProvider>
         <OGPage />
-      </XDEFIProviderProvider>
+      </XDEFIWalletProvider>
     </div>
   )
 }
