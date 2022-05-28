@@ -18,7 +18,8 @@ import { useWallet } from '../../../hooks/useWallet/useWallet'
 
 export enum XDEFIProviderActions {
   XDEFI_CONNECTED = 'XDEFI_CONNECTED',
-  XDEFI_DISCONNECTED = 'XDEFI_CONNECTED',
+  XDEFI_NOT_DISCONNECTED = 'XDEFI_NOT_DISCONNECTED',
+  RESET_STATE = 'RESET_STATE',
 }
 
 export type ActionTypes =
@@ -28,26 +29,27 @@ export type ActionTypes =
         ethereumWallet: HDWallet
         xfiBitcoinProvider: any
         xfiLitecoinProvider: any
-        xfiBitcoinWalletAddress: string
-        xfiLItecoinWalletAddress: string
-        isWalletLoading: boolean
+        xfiBitcoinWalletAddress?: string
+        xfiLItecoinWalletAddress?: string
       }
     }
   | {
-      type: XDEFIProviderActions.XDEFI_DISCONNECTED
+      type: XDEFIProviderActions.XDEFI_NOT_DISCONNECTED
       payload: {
         ethereumWallet: HDWallet
-        isWalletLoading: boolean
       }
+    }
+  | {
+      type: XDEFIProviderActions.RESET_STATE
     }
 
 export interface InitialState {
   ethereumWallet: HDWallet | null
   xfiBitcoinProvider: any | null
   xfiLitecoinProvider: any | null
-  isWalletLoading: boolean
-  xfiBitcoinWalletAddress?: string
+  xfiBitcoinWalletAddresss?: string
   xfiLItecoinWalletAddress?: string
+  isWalletLoading: boolean
 }
 
 const initialState: InitialState = {
@@ -63,12 +65,20 @@ export const reducer = (state: InitialState, action: ActionTypes) => {
       return {
         ...state,
         ...action.payload,
+        isWalletLoading: false,
       }
     }
-    case XDEFIProviderActions.XDEFI_DISCONNECTED: {
+    case XDEFIProviderActions.XDEFI_NOT_DISCONNECTED: {
       return {
         ...initialState,
         ...action.payload,
+        isWalletLoading: false,
+      }
+    }
+    case XDEFIProviderActions.RESET_STATE: {
+      return {
+        ...initialState,
+        isWalletLoading: false,
       }
     }
     default:
@@ -138,7 +148,6 @@ export const XDEFIProviderProvider = ({ children }: { children: React.ReactNode 
                 xfiLitecoinProvider,
                 xfiBitcoinWalletAddress,
                 xfiLItecoinWalletAddress,
-                isWalletLoading: false,
               },
             })
           })()
@@ -146,14 +155,17 @@ export const XDEFIProviderProvider = ({ children }: { children: React.ReactNode 
         }
         default: {
           dispatch({
-            type: XDEFIProviderActions.XDEFI_DISCONNECTED,
+            type: XDEFIProviderActions.XDEFI_NOT_DISCONNECTED,
             payload: {
               ethereumWallet: wallet!,
-              isWalletLoading: false,
             },
           })
         }
       }
+    } else {
+      dispatch({
+        type: XDEFIProviderActions.RESET_STATE,
+      })
     }
   }, [localWalletType, localWalletDeviceId, wallet])
 
