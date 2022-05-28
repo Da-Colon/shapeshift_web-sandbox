@@ -10,6 +10,7 @@ import { PrivacyPolicy } from 'pages/Legal/PrivacyPolicy'
 import { TermsOfService } from 'pages/Legal/TermsOfService'
 import { NotFound } from 'pages/NotFound/NotFound'
 
+import { Sandbox } from '../pages/Sandbox'
 import { PrivateRoute } from './PrivateRoute'
 
 function useLocationBackground() {
@@ -82,6 +83,11 @@ export const Routes = () => {
       <Route path='/flags'>
         <Layout>
           <Flags />
+        </Layout>
+      </Route>
+      <Route path='/og'>
+        <Layout>
+          <Sandbox />
         </Layout>
       </Route>
       <Redirect from='/' to='/dashboard' />
