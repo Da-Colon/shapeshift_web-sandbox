@@ -57,7 +57,9 @@ const getInitialState = () => {
   return initialState
 }
 
-const injectedAccount = async (xfiProvider: any): Promise<string[]> => {
+const injectedAccount = async (
+  xfiProvider: IXfiBitcoinProvider | IXfiLitecoinProvider,
+): Promise<string[]> => {
   return new Promise(resolve => {
     xfiProvider.request(
       { method: 'request_accounts', params: [] },
